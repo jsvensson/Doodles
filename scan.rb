@@ -9,55 +9,37 @@ class String
 end
 
 # File paths
-source_dirs = ["source"]
+source_dirs = ["/Volumes/S170 649-1011"]
 dest_dir = "output"
 
 # Create destination directory if it doesn't exist
 if not File.exists?(dest_dir)
   puts "Creating output directory"
-  FileUtils.mkdir dest_dir
+  FileUtils.mkdir_p dest_dir
 end
 
-# Create file/directory list
-filelist  = Array.new
-dirlist   = Array.new
+# Create file list
+filelist = Array.new
 for dir in source_dirs
   Find.find(dir) do |path|
-    if FileTest.directory?(path)
-      dirlist << path
-    else
-      filelist << path
-    end
+    filelist << path
   end
 end
 
-# Replicate source directory structure at destination
-
-FileUtils.cd(dest_dir) do
-  for dir in dirlist
-    if not File.exists?(dir)
-      FileUtils.mkdir dir
-    end
-  end
-end
+# First entry is source dir - cut that
+filelist.shift
 
 # Move some bits
 for file in filelist
-  puts file
-  md5_in = Digest::MD5.file(file).hexdigest
-  puts "in:  #{md5_in}"
+  puts "File: ".red + file
+  puts "Dest: ".green + dest_file = dest_dir + file
+  puts "Size: ".green + File.size(file).to_s
 
-  # Copy file to destination
-  dest_file = dest_dir + "/" + file
-  FileUtils.copy_file(file, dest_file)
+  dest_path = File.dirname(File.expand_path(dest_file))
 
-  # Verify checksums
-  md5_out = Digest::MD5.file(dest_file).hexdigest
-  print "out: " + md5_out + " ["
-  if md5_in == md5_out
-    print " OK ".green
-  else
-    print "FAIL".red
-  end
-  print "]\n\n"
+  # Create target dir
+  FileUtils.mkdir_p dest_path 
+  FileUtils::DryRun.cp(file, dest_file)
+
+  print "\n"
 end
