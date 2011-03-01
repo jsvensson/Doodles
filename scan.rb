@@ -31,11 +31,12 @@ filelist.shift
 
 # Move some bits
 for file in filelist
-  puts "File: ".red + file
-  puts "Dest: ".green + dest_file = dest_dir + file
-  puts "Size: ".green + File.size(file).to_s
-
+  dest_file = dest_dir + file
   dest_path = File.dirname(File.expand_path(dest_file))
+
+  puts "File: ".red + file
+  puts "Dest: ".green + dest_file
+  puts "Size: ".green + File.size(file).to_s
 
   # Create target dir
   FileUtils.mkdir_p dest_path 
