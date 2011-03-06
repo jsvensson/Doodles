@@ -1,6 +1,5 @@
 require 'find'
 require 'fileutils'
-require 'digest/md5'
 
 class String
   def colorize(color_code); "#{color_code}#{self}\e[0m"; end
@@ -9,8 +8,12 @@ class String
 end
 
 # File paths
-source_dirs = ["/Volumes/S170 649-1011"]
-dest_dir = "output"
+source_dirs = ["/Users/echo/Desktop/Warhammer"]
+dest_dir = "/Users/echo/dev/bukowskis/output"
+
+
+# File types to copy (dot included, case ignored)
+file_exts = [".tiff", ".tif", ".jpg", ".jpeg"]
 
 # Create destination directory if it doesn't exist
 if not File.exists?(dest_dir)
@@ -31,16 +34,21 @@ filelist.shift
 
 # Move some bits
 for file in filelist
-  dest_file = dest_dir + file
-  dest_path = File.dirname(File.expand_path(dest_file))
-
   puts "File: ".red + file
-  puts "Dest: ".green + dest_file
-  puts "Size: ".green + File.size(file).to_s
+  # Only copy file types we want
+  if file_exts.include?(File.extname(file))
+    dest_file = dest_dir + file
+    dest_path = File.dirname(File.expand_path(dest_file))
 
-  # Create target dir
-  FileUtils.mkdir_p dest_path 
-  FileUtils::DryRun.cp(file, dest_file)
+    puts "Dest: ".green + dest_file
+    puts "Size: ".green + File.size(file).to_s
 
-  print "\n"
+    # Create target dir
+    FileUtils.mkdir_p dest_path 
+    FileUtils::DryRun.cp(file, dest_file)
+
+    print "\n"
+  else
+    puts "Skipped".red  
+  end
 end
