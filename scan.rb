@@ -47,7 +47,7 @@ for file in filelist
     FileUtils.mkdir_p dest_path
     FileUtils.cp(file, dest_file)
 
-    print "\n"
+    puts
   else
     puts "Skipped".red
     puts
