@@ -13,7 +13,7 @@ dest_dir = "/Users/echo/dev/bukowskis/output"
 
 
 # File types to copy (dot included, case ignored)
-file_exts = [".tiff", ".tif", ".jpg", ".jpeg", ".png"]
+filter_file_exts = [".tiff", ".tif", ".jpg", ".jpeg", ".png"]
 
 # Create destination directory if it doesn't exist
 if not File.exists?(dest_dir)
@@ -36,7 +36,7 @@ for file in filelist
   puts "Source: ".green + file.sub(source_dir, "")
 
   # Only copy file types we want
-  if File.file?(file) and file_exts.include?(File.extname(file).downcase)
+  if File.file?(file) and filter_file_exts.include?(File.extname(file).downcase)
     dest_file = dest_dir + file
     dest_path = File.dirname(File.expand_path(dest_file))
 
