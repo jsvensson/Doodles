@@ -8,12 +8,12 @@ class String
 end
 
 # File paths
-source_dirs = ["/Users/echo/Desktop/Warhammer"]
+source_dir = "/Users/echo/Desktop/Warhammer"
 dest_dir = "/Users/echo/dev/bukowskis/output"
 
 
 # File types to copy (dot included, case ignored)
-file_exts = [".tiff", ".tif", ".jpg", ".jpeg"]
+file_exts = [".tiff", ".tif", ".jpg", ".jpeg", ".png"]
 
 # Create destination directory if it doesn't exist
 if not File.exists?(dest_dir)
@@ -23,10 +23,8 @@ end
 
 # Create file list
 filelist = Array.new
-for dir in source_dirs
-  Find.find(dir) do |path|
+Find.find(source_dir) do |path|
     filelist << path
-  end
 end
 
 # First entry is source dir - cut that
@@ -34,21 +32,24 @@ filelist.shift
 
 # Move some bits
 for file in filelist
-  puts "File: ".red + file
+  # Show path relative to source dir
+  puts "Source: ".green + file.sub(source_dir, "")
+
   # Only copy file types we want
-  if file_exts.include?(File.extname(file))
+  if File.file?(file) and file_exts.include?(File.extname(file).downcase)
     dest_file = dest_dir + file
     dest_path = File.dirname(File.expand_path(dest_file))
 
-    puts "Dest: ".green + dest_file
+    puts "Target: ".green + dest_file.sub!(source_dir, "")
     puts "Size: ".green + File.size(file).to_s
 
     # Create target dir
-    FileUtils.mkdir_p dest_path 
-    FileUtils::DryRun.cp(file, dest_file)
+    FileUtils.mkdir_p dest_path
+    FileUtils.cp(file, dest_file)
 
     print "\n"
   else
-    puts "Skipped".red  
+    puts "Skipped".red
+    puts
   end
 end
