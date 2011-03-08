@@ -12,8 +12,8 @@ source_dir = "/Users/echo/Desktop/Warhammer"
 dest_dir = "/Users/echo/dev/bukowskis/output"
 
 
-# File types to copy (dot included, case ignored)
-filter_file_exts = [".tiff", ".tif", ".jpg", ".jpeg", ".png"]
+# File types to copy (dot included, lowercase)
+filter_file_exts = [".tiff", ".tif", ".jpg", ".jpeg"]
 
 # Create destination directory if it doesn't exist
 if not File.exists?(dest_dir)
@@ -47,9 +47,8 @@ for file in filelist
     FileUtils.mkdir_p dest_path
     FileUtils.cp(file, dest_file)
 
-    puts
   else
     puts "Skipped".red
-    puts
   end
+  puts
 end
